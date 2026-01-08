@@ -1,0 +1,73 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --color-main-purple: #635fc7;
+  --color-main-purple-hover: #a8a4ff;
+  --color-black: #000112;
+  --color-very-dark-grey: #20212c;
+  --color-dark-grey: #2b2c37;
+  --color-lines-dark: #3e3f4e;
+  --color-medium-grey: #828fa3;
+  --color-lines-light: #e4ebfa;
+  --color-light-grey: #f4f7fd;
+  --color-white: #ffffff;
+  --color-red: #ea5555;
+  --color-red-hover: #ff9898;
+}
+
+@layer base {
+}
+
+@layer components {
+  /* buttons */
+  .btn {
+    @apply cursor-pointer rounded-3xl;
+  }
+  .btn-primary-l {
+    @apply bg-main-purple hover:bg-main-purple-hover text-[15px] leading-4.75 font-bold text-white;
+  }
+  .btn-primary-s {
+    @apply bg-main-purple hover:bg-main-purple-hover text-[13px] leading-5.75 font-bold text-white;
+  }
+  .btn-secondary {
+    @apply bg-main-purple/10 text-main-purple hover:bg-main-purple/25 text-[13px] leading-5.75 font-bold dark:hover:bg-white;
+  }
+
+  .btn-destructive {
+    @apply bg-red hover:bg-red-hover text-[13px] leading-5.75 font-bold;
+  }
+
+  /* forms */
+  .input__field__container {
+    @apply border-medium-grey/25 focus-within:border-main-purple dark:bg-dark-grey flex items-center justify-between gap-4 rounded-sm border px-4 py-1.5;
+  }
+
+  .input__field {
+    @apply flex-1 text-black placeholder:text-black/25 focus:outline-none dark:text-white dark:placeholder:text-white/25;
+  }
+}
+
+@layer utilities {
+  .heading-xl {
+    @apply text-2xl leading-7.5 font-bold;
+  }
+  .heading-l {
+    @apply text-lg leading-5.75 font-bold;
+  }
+  .heading-m {
+    @apply text-[15px] leading-4.75 font-bold;
+  }
+  .heading-s {
+    @apply text-xs leading-3.75 font-bold tracking-[2.4px];
+  }
+
+  .body-l {
+    @apply text-[13px] leading-5.75 font-medium;
+  }
+
+  .body-m {
+    @apply text-xs leading-3.75 font-bold;
+  }
+}

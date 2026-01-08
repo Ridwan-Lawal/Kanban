@@ -1,0 +1,13 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+echo "🚀 Running pre-commit checks..."
+
+# 1. Run Linting
+npx lint-staged
+
+# 2. Run Type Checking (This is crucial for Next.js)
+# We use 'tsc --noEmit' to check types without generating files
+npx tsc --noEmit
+
+echo "✅ Checks passed. Committing code..."
