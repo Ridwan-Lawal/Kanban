@@ -26,7 +26,7 @@
     @apply cursor-pointer rounded-3xl;
   }
   .btn-primary-l {
-    @apply bg-main-purple hover:bg-main-purple-hover text-[15px] leading-4.75 font-bold text-white;
+    @apply bg-main-purple hover:bg-main-purple-hover text-[15px] leading-4.75 font-bold text-white disabled:cursor-not-allowed disabled:opacity-50;
   }
   .btn-primary-s {
     @apply bg-main-purple hover:bg-main-purple-hover text-[13px] leading-5.75 font-bold text-white;

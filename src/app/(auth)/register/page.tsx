@@ -1,3 +1,4 @@
+import Register from "@/features/auth/Register";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -5,5 +6,9 @@ export const metadata: Metadata = {
 };
 
 export default function Page() {
-  return <div>Register</div>;
+  return (
+    <div>
+      <Register />
+    </div>
+  );
 }
