@@ -2,11 +2,35 @@
 import Divider from "@/components/ui/Divider";
 import InputField, { PasswordInputField } from "@/components/ui/InputField";
 import OAuthBtn from "@/components/ui/OAuthBtn";
+import { usePassword } from "@/hooks/usePassword";
+import { LoginSchema, LoginType } from "@/lib/schema/auth-schema";
 import Logo from "@/public/icon.svg";
+import { zodResolver } from "@hookform/resolvers/zod";
 import Image from "next/image";
 import Link from "next/link";
+import { useForm, useWatch } from "react-hook-form";
 
 export default function Login() {
+  const { register, handleSubmit, control, reset, formState } = useForm<LoginType>({
+    resolver: zodResolver(LoginSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  });
+  const values = useWatch({
+    control,
+  });
+  const { isPasswordShown, handlePasswordVisibility } = usePassword();
+
+  const areAllInputsPopulated = Object.values(values).every((input) => input);
+
+  const { errors } = formState;
+
+  function handleLogin(formData: LoginType) {
+    console.log(formData);
+  }
+
   return (
     <div className="from-main-purple-hover/10 flex min-h-screen w-screen items-center justify-center bg-linear-to-r to-white">
       <div className="w-full max-w-100 px-4 py-8">
@@ -20,32 +44,57 @@ export default function Login() {
         </div>
 
         {/* form */}
-        <form action="" autoComplete="" className="mt-6 flex flex-col gap-4">
-          <InputField htmlFor="email" label="Email" error="">
+        <form
+          action=""
+          autoComplete=""
+          className="mt-6 flex flex-col gap-4"
+          onSubmit={handleSubmit(handleLogin)}
+        >
+          <InputField htmlFor="email" label="Email" error={errors?.email?.message}>
             <input
               type="text"
-              name="email"
               id="email"
               defaultValue=""
               autoComplete="email"
               placeholder="name@example.com "
               className="input__field body-l"
+              aria-invalid={!!errors?.email?.message}
+              {...register("email")}
             />
           </InputField>
 
-          <PasswordInputField htmlFor="password" label="Password" error="">
+          <PasswordInputField
+            htmlFor="password"
+            label="Password"
+            error={errors?.password?.message}
+            isPasswordShown={isPasswordShown}
+            onPasswordVisiblity={handlePasswordVisibility}
+          >
             <input
-              type="password"
-              name="password"
+              type={isPasswordShown ? "text" : "password"}
               id="password"
               defaultValue=""
               autoComplete="password"
               placeholder="********"
               className="input__field body-l"
+              aria-invalid={!!errors?.password?.message}
+              {...register("password")}
             />
           </PasswordInputField>
+          <Link
+            href="/forgot-password"
+            className="text-medium-grey hover: hover:text-main-purple -mt-2 text-right text-[11px] font-medium underline"
+          >
+            Forgot password?
+          </Link>
 
-          <button className="btn btn-primary-l mt-3 w-full rounded-lg px-4 py-3">Sign in</button>
+          <button
+            disabled={!areAllInputsPopulated}
+            aria-disabled={!areAllInputsPopulated}
+            className="btn btn-primary-l mt-0 w-full rounded-lg px-4 py-3"
+          >
+            Sign in
+          </button>
         </form>
 
         <Divider />

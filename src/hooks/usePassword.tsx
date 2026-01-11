@@ -1,7 +1,7 @@
 import { checkPasswordStrength } from "@/utils/password-checker";
 import { useState } from "react";
 
-export function usePassword(passwordValue: string) {
+export function usePassword(passwordValue?: string) {
   const [isPasswordReqListOpen, setIsPasswordReqListOpen] = useState(false);
   const [isPasswordShown, setIsPasswordShown] = useState(false);
   const handlePasswordVisibility = () => setIsPasswordShown((cs) => !cs);
