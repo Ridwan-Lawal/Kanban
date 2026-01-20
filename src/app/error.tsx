@@ -9,7 +9,7 @@ interface ErrorProps {
 
 export default function Error({ error, reset }: ErrorProps) {
   return (
-    <div className="flex items-center justify-center">
+    <div className="flex h-screen items-center justify-center">
       <div className="w-full max-w-md text-center">
         <div className="bg-destructive/10 mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full">
           <AlertTriangle className="text-destructive h-10 w-10" />
@@ -22,11 +22,14 @@ export default function Error({ error, reset }: ErrorProps) {
           back to the home page.
         </p>
 
-        <div className="bg-muted/50 mb-6 rounded-lg p-4 text-left">
+        <div className="bg-muted/50 mb-6 flex flex-col items-center rounded-lg p-4 text-left">
           <p className="text-foreground text-sm font-medium">Error details:</p>
           <p className="text-muted-foreground mt-1 font-mono text-sm break-all">{error.message}</p>
 
-          <button onClick={reset} className="gap-2 bg-[#635FC7] font-medium text-white">
+          <button
+            onClick={reset}
+            className="mt-8 flex items-center justify-center gap-2 rounded-3xl bg-[#635FC7] px-6 py-2.5 font-medium text-white"
+          >
             <RefreshCw className="size-4" />
             Try Again
           </button>

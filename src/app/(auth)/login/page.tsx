@@ -1,3 +1,4 @@
+import Login from "@/features/auth/Login";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -5,5 +6,9 @@ export const metadata: Metadata = {
 };
 
 export default function Page() {
-  return <div>Login</div>;
+  return (
+    <div>
+      <Login />
+    </div>
+  );
 }

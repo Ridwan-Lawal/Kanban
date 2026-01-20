@@ -1,22 +1,25 @@
-import { EyeIcon } from "lucide-react";
+import { EyeClosed, EyeIcon } from "lucide-react";
+import { PropsWithChildren } from "react";
 
-export default function InputField() {
+interface InputFieldProps extends PropsWithChildren {
+  label: string;
+  error?: string;
+  htmlFor: string;
+  isPasswordShown?: boolean;
+  onPasswordVisiblity?: () => void;
+}
+
+export default function InputField({ label, error, htmlFor, children }: InputFieldProps) {
   return (
     <div className="flex flex-col gap-2">
-      <label htmlFor="label" className="body-m text-medium-grey dark:text-white">
-        Text Field (idle)
+      <label htmlFor={htmlFor} className="body-m text-medium-grey dark:text-white">
+        {label}
       </label>
 
       <div className="input__field__container">
-        <input
-          type="text"
-          name="label"
-          id="label"
-          placeholder="Enter task name"
-          className="input__field body-l"
-        />
+        {children}
 
-        {/* <p className="body-l text-red">Can&apos;t be empty</p> */}
+        {error && <p className="body-l text-red">{error}</p>}
       </div>
     </div>
   );
@@ -24,25 +27,34 @@ export default function InputField() {
 
 // error: border-red
 
-export function PasswordInputField() {
+export function PasswordInputField({
+  children,
+  htmlFor,
+  error,
+  label,
+  isPasswordShown,
+  onPasswordVisiblity,
+}: InputFieldProps) {
   const iconStyle = "text-medium-grey size-5 cursor-pointer dark:text-white";
+
   return (
     <div className="flex flex-col gap-2">
-      <label htmlFor="label" className="body-m text-medium-grey dark:text-white">
-        Text Field (idle)
+      <label htmlFor={htmlFor} className="body-m text-medium-grey dark:text-white">
+        {label}
       </label>
 
       <div className="input__field__container">
-        <input
-          type="text"
-          name="label"
-          id="label"
-          placeholder="Enter task name"
-          className="input__field body-l"
-        />
+        {children}
 
-        <EyeIcon className={iconStyle} />
-        {/* <p className="body-l text-red">Can&apos;t be empty</p> */}
+        <button type="button" onClick={onPasswordVisiblity}>
+          {isPasswordShown ? (
+            <EyeClosed className={iconStyle} />
+          ) : (
+            <EyeIcon className={iconStyle} />
+          )}
+        </button>
+
+        {error && <p className="body-l text-red">children</p>}
       </div>
     </div>
   );
