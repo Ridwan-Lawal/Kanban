@@ -3,13 +3,19 @@ import Divider from "@/components/ui/Divider";
 import InputField, { PasswordInputField } from "@/components/ui/InputField";
 import OAuthBtn from "@/components/ui/OAuthBtn";
 import PasswordRequirements from "@/components/ui/PasswordRequirements";
+import { handleRegistrationAction } from "@/features/auth/auth-action";
 import { usePassword } from "@/hooks/usePassword";
-import { RegisterSchema, RegisterType } from "@/lib/schema/auth-schema";
+import { addEmailToVerify } from "@/lib/redux/auth-slice";
+import { useAppDispatch } from "@/lib/redux/hooks";
+import { RegisterSchema, RegisterType } from "@/lib/schema/auth-zod-schema";
 import Logo from "@/public/icon.svg";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useTransition } from "react";
 import { useForm, useWatch } from "react-hook-form";
+import { toast } from "sonner";
 
 export default function Register() {
   const { register, handleSubmit, reset, formState, control } = useForm<RegisterType>({
@@ -24,12 +30,28 @@ export default function Register() {
     control,
   });
   const password = usePassword(formValues?.password ?? "");
+  const [isRegistering, startTransition] = useTransition();
+  const router = useRouter();
+  const dispatch = useAppDispatch();
 
   const { errors } = formState;
   const areAllInputsFilled = Object.values(formValues).every((input) => input);
 
   function handleRegister(formData: RegisterType) {
     console.log(formData);
+
+    startTransition(async () => {
+      const res = await handleRegistrationAction(formData);
+      if (res?.error) {
+        toast.error("Registration failed", { description: res.error });
+      }
+      if (res?.success) {
+        dispatch(addEmailToVerify(formData.email));
+        reset();
+        toast.success(res.success);
+        router.push("/verify-email");
+      }
+    });
   }
 
   return (
@@ -56,6 +78,7 @@ export default function Register() {
               type="text"
               id="email"
               onFocus={password.handleClosePasswordReqList}
+              disabled={isRegistering}
               defaultValue=""
               autoComplete="email"
               placeholder="name@example.com "
@@ -77,6 +100,7 @@ export default function Register() {
                 type={password.isPasswordShown ? "text" : "password"}
                 id="password"
                 defaultValue=""
+                disabled={isRegistering}
                 onFocus={password.handleOpenPasswordReqList}
                 autoComplete="password"
                 placeholder="********"
@@ -104,6 +128,7 @@ export default function Register() {
               id="confirmPassword"
               defaultValue=""
               onFocus={password.handleClosePasswordReqList}
+              disabled={isRegistering}
               autoComplete="confirmPassword"
               placeholder="********"
               className="input__field body-l"
@@ -114,9 +139,9 @@ export default function Register() {
 
           <button
             className="btn btn-primary-l mt-3 w-full rounded-lg px-4 py-3"
-            disabled={!areAllInputsFilled}
+            disabled={!areAllInputsFilled || isRegistering}
           >
-            Sign up
+            {isRegistering ? "Signing up..." : "Sign up"}
           </button>
         </form>
 

@@ -2,13 +2,18 @@
 import Divider from "@/components/ui/Divider";
 import InputField, { PasswordInputField } from "@/components/ui/InputField";
 import OAuthBtn from "@/components/ui/OAuthBtn";
+import { handleLoginAction } from "@/features/auth/auth-action";
 import { usePassword } from "@/hooks/usePassword";
-import { LoginSchema, LoginType } from "@/lib/schema/auth-schema";
+import { LoginSchema, LoginType } from "@/lib/schema/auth-zod-schema";
 import Logo from "@/public/icon.svg";
+import { DEFAULT_REDIRECT_URL } from "@/route";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useTransition } from "react";
 import { useForm, useWatch } from "react-hook-form";
+import { toast } from "sonner";
 
 export default function Login() {
   const { register, handleSubmit, control, reset, formState } = useForm<LoginType>({
@@ -22,13 +27,29 @@ export default function Login() {
     control,
   });
   const { isPasswordShown, handlePasswordVisibility } = usePassword();
+  const [isLoggingIn, startTransition] = useTransition();
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const callbackUrl = searchParams.get("from") || DEFAULT_REDIRECT_URL;
 
   const areAllInputsPopulated = Object.values(values).every((input) => input);
 
   const { errors } = formState;
 
   function handleLogin(formData: LoginType) {
-    console.log(formData);
+    startTransition(async () => {
+      const res = await handleLoginAction(formData);
+      if (res.error) {
+        console.log(res.error);
+        toast.error("Login failed", { description: res.error });
+      }
+
+      if (res.success) {
+        toast.success(res.success);
+        reset();
+        router.push(callbackUrl);
+      }
+    });
   }
 
   return (
@@ -55,6 +76,7 @@ export default function Login() {
               type="text"
               id="email"
               defaultValue=""
+              disabled={isLoggingIn}
               autoComplete="email"
               placeholder="name@example.com "
               className="input__field body-l"
@@ -75,6 +97,7 @@ export default function Login() {
               id="password"
               defaultValue=""
               autoComplete="password"
+              disabled={isLoggingIn}
               placeholder="********"
               className="input__field body-l"
               aria-invalid={!!errors?.password?.message}
@@ -89,11 +112,11 @@ export default function Login() {
           </Link>
 
           <button
-            disabled={!areAllInputsPopulated}
-            aria-disabled={!areAllInputsPopulated}
+            disabled={!areAllInputsPopulated || isLoggingIn}
+            aria-disabled={!areAllInputsPopulated || isLoggingIn}
             className="btn btn-primary-l mt-0 w-full rounded-lg px-4 py-3"
           >
-            Sign in
+            {isLoggingIn ? "Signing in..." : "Sign in"}
           </button>
         </form>
 

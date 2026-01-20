@@ -1,9 +1,15 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { triggerVerificationEmail } from "@/features/auth/auth-action";
+import { getAuthState } from "@/lib/redux/auth-slice";
+import { useAppSelector } from "@/lib/redux/hooks";
+import { useEffect, useState, useTransition } from "react";
+import { toast } from "sonner";
 
 export default function VerifyEmail() {
   const [timeLeft, setTimeLeft] = useState(30);
+  const [isResendingEmail, startTransition] = useTransition();
+  const { emailToVerify } = useAppSelector(getAuthState);
 
   // 2. Setup the countdown logic
   useEffect(() => {
@@ -16,8 +22,12 @@ export default function VerifyEmail() {
     return () => clearInterval(intervalId);
   }, [timeLeft]);
 
-  const handleResend = () => {
-    console.log("Resending email...");
+  const handleResend = async () => {
+    startTransition(async () => {
+      const res = await triggerVerificationEmail(emailToVerify);
+      if (res.success) toast.success("Verification email sent. Please check your inbox.");
+      if (!res.success) toast.error("Failed to send verification email. Please try again later.");
+    });
 
     setTimeLeft(30);
   };
@@ -74,10 +84,14 @@ export default function VerifyEmail() {
           className={`w-full rounded-md px-4 py-3 text-sm font-semibold text-white transition-colors duration-200 ${
             timeLeft > 0
               ? "cursor-not-allowed opacity-50"
-              : "bg-main-purple hover:bg-main-purple-hover shadow-md"
+              : "bg-main-purple hover:bg-main-purple-hover cursor-pointer shadow-md"
           } `}
         >
-          {timeLeft > 0 ? "Wait to Resend" : "Resend Verification Email"}
+          {timeLeft > 0
+            ? "Wait to Resend"
+            : isResendingEmail
+              ? "Resending email..."
+              : "Resend Verification Email"}
         </button>
 
         <p className="mt-6 text-xs text-gray-400">

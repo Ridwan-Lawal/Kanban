@@ -1,11 +1,14 @@
 "use client";
 import InputField from "@/components/ui/InputField";
-import { ForgotPasswordSchema, ForgotPasswordType } from "@/lib/schema/auth-schema";
+import { requestPasswordRequestAction } from "@/features/auth/auth-action";
+import { ForgotPasswordSchema, ForgotPasswordType } from "@/lib/schema/auth-zod-schema";
 import Logo from "@/public/icon.svg";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Image from "next/image";
 import Link from "next/link";
+import { useTransition } from "react";
 import { useForm, useWatch } from "react-hook-form";
+import { toast } from "sonner";
 
 export default function ForgotPassword() {
   const { register, handleSubmit, control, reset, formState } = useForm<ForgotPasswordType>({
@@ -17,13 +20,21 @@ export default function ForgotPassword() {
   const { email } = useWatch({
     control,
   });
+  const [isSendingEmail, startTransition] = useTransition();
 
   const isEmailInputPopulated = !!email;
 
   const { errors } = formState;
 
   function handleSendingResetEmail(formData: ForgotPasswordType) {
-    console.log(formData);
+    startTransition(async () => {
+      const res = await requestPasswordRequestAction(formData);
+      if (res.error) toast.error(res.error);
+      if (res.success) {
+        reset();
+        toast.success(res.success);
+      }
+    });
   }
 
   return (
@@ -55,17 +66,18 @@ export default function ForgotPassword() {
               autoComplete="email"
               placeholder="name@example.com "
               className="input__field body-l"
+              disabled={isSendingEmail}
               aria-invalid={!!errors?.email?.message}
               {...register("email")}
             />
           </InputField>
 
           <button
-            disabled={!isEmailInputPopulated}
-            aria-disabled={!isEmailInputPopulated}
+            disabled={!isEmailInputPopulated || isSendingEmail}
+            aria-disabled={!isEmailInputPopulated || isSendingEmail}
             className="btn btn-primary-l mt-0 w-full rounded-lg px-4 py-3"
           >
-            Send Password Reset Email
+            {isSendingEmail ? "Sending reset mail..." : " Send Password Reset Email"}
           </button>
 
           <div className="mt-5 flex items-center">

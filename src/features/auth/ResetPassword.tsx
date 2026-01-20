@@ -1,13 +1,17 @@
 "use client";
 import { PasswordInputField } from "@/components/ui/InputField";
 import PasswordRequirements from "@/components/ui/PasswordRequirements";
+import { resetPasswordAction } from "@/features/auth/auth-action";
 import { usePassword } from "@/hooks/usePassword";
-import { ResetPasswordSchema, ResetPasswordType } from "@/lib/schema/auth-schema";
+import { ResetPasswordSchema, ResetPasswordType } from "@/lib/schema/auth-zod-schema";
 import Logo from "@/public/icon.svg";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useTransition } from "react";
 import { useForm, useWatch } from "react-hook-form";
+import { toast } from "sonner";
 
 export default function ResetPassword() {
   const { register, handleSubmit, reset, formState, control } = useForm<ResetPasswordType>({
@@ -20,6 +24,10 @@ export default function ResetPassword() {
   const formValues = useWatch({
     control,
   });
+  const [isResettingPassword, startTransition] = useTransition();
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const resetToken = searchParams.get("token");
 
   const password = usePassword(formValues?.password ?? "");
 
@@ -27,7 +35,17 @@ export default function ResetPassword() {
   const areAllInputsFilled = Object.values(formValues).every((input) => input);
 
   function handlePasswordReset(formData: ResetPasswordType) {
-    console.log(formData);
+    startTransition(async () => {
+      const res = await resetPasswordAction(formData, resetToken);
+      if (res.error) {
+        toast.error(res.error);
+      }
+      if (res.success) {
+        toast.success(res.success);
+        reset();
+        router.push("/login");
+      }
+    });
   }
 
   return (
@@ -66,6 +84,7 @@ export default function ResetPassword() {
                 onFocus={password.handleOpenPasswordReqList}
                 autoComplete="password"
                 placeholder="********"
+                disabled={isResettingPassword}
                 className="input__field body-l"
                 aria-invalid={!!errors?.password?.message}
                 {...register("password")}
@@ -92,6 +111,7 @@ export default function ResetPassword() {
               onFocus={password.handleClosePasswordReqList}
               autoComplete="confirmPassword"
               placeholder="********"
+              disabled={isResettingPassword}
               className="input__field body-l"
               aria-invalid={!!errors.confirmPassword?.message}
               {...register("confirmPassword")}
@@ -100,9 +120,9 @@ export default function ResetPassword() {
 
           <button
             className="btn btn-primary-l mt-3 w-full rounded-lg px-4 py-3"
-            disabled={!areAllInputsFilled}
+            disabled={!areAllInputsFilled || isResettingPassword}
           >
-            Reset Password
+            {isResettingPassword ? "Resetting..." : "Reset Password"}
           </button>
         </form>
 

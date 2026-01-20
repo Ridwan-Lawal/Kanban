@@ -1,5 +1,9 @@
 import z from "zod";
 
+export const OnboardingSchema = z.object({
+  name: z.string().min(1, "Enter a name to be addressed by").max(255, "Invalid name, too long"),
+});
+
 export const ResetPasswordSchema = z
   .object({
     password: z
@@ -50,3 +54,4 @@ export type RegisterType = z.infer<typeof RegisterSchema>;
 export type LoginType = z.infer<typeof LoginSchema>;
 export type ForgotPasswordType = Pick<LoginType, "email">;
 export type ResetPasswordType = Omit<RegisterType, "email">;
+export type OnboardingType = z.infer<typeof OnboardingSchema>;
