@@ -1,3 +1,4 @@
+import EmptyBoard from "@/features/dashboard/EmptyBoard";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -5,5 +6,9 @@ export const metadata: Metadata = {
 };
 
 export default function Page() {
-  return <div>Dashboard page</div>;
+  return (
+    <div className="flex h-full items-center justify-center border">
+      <EmptyBoard />
+    </div>
+  );
 }

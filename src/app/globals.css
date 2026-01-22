@@ -23,11 +23,17 @@
 
 @layer components {
   /* buttons */
+  button {
+    @apply cursor-pointer;
+  }
   .btn {
-    @apply cursor-pointer rounded-3xl;
+    @apply rounded-3xl;
   }
   .btn-primary-l {
     @apply bg-main-purple hover:bg-main-purple-hover text-[15px] leading-4.75 font-bold text-white disabled:cursor-not-allowed disabled:opacity-50;
+  }
+  .btn-primary-padding {
+    @apply rounded-[24px] px-6 py-3.5 capitalize;
   }
   .btn-primary-s {
     @apply bg-main-purple hover:bg-main-purple-hover text-[13px] leading-5.75 font-bold text-white;
@@ -47,6 +53,11 @@
 
   .input__field {
     @apply flex-1 text-black placeholder:text-black/25 focus:outline-none dark:text-white dark:placeholder:text-white/25;
+  }
+
+  /* menu */
+  .boards-dropdown li {
+    @apply hover:bg-main-purple-hover cursor-pointer transition-all hover:text-white;
   }
 }
 
