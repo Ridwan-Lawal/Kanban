@@ -1,0 +1,2 @@
+ALTER TABLE "boards" ADD COLUMN "created_at" "cal::local_datetime" DEFAULT now() NOT NULL;--> statement-breakpoint
+ALTER TABLE "columns" ADD COLUMN "created_at" "cal::local_datetime" DEFAULT now() NOT NULL;

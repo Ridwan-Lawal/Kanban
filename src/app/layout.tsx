@@ -2,6 +2,7 @@ import "./globals.css";
 import { plusJS } from "@/app/fonts";
 import ReduxProvider from "@/components/ui/ReduxProvider";
 import AuthClientProxy from "@/features/auth/AuthClientProxy";
+import Providers from "@/lib/tanstack/providers";
 import { Metadata } from "next";
 import { PropsWithChildren } from "react";
 import { Toaster } from "sonner";
@@ -20,10 +21,12 @@ export default function RootLayout({ children }: Readonly<PropsWithChildren>) {
   return (
     <html lang="en">
       <body className={`${plusJS.className} antialiased`}>
-        <ReduxProvider>
-          <AuthClientProxy>{children}</AuthClientProxy>
-          <Toaster richColors />
-        </ReduxProvider>
+        <Providers>
+          <ReduxProvider>
+            <AuthClientProxy>{children}</AuthClientProxy>
+            <Toaster richColors />
+          </ReduxProvider>
+        </Providers>
       </body>
     </html>
   );

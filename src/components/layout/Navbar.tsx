@@ -2,20 +2,68 @@
 
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
+import { useSession } from "@/features/auth/hooks/useSession";
+import { useGetBoards } from "@/features/boards/hooks/useBoards";
+import { useDisplayError } from "@/hooks/useDisplayError";
+import {
+  handleAddBoardFormToggle,
+  handleAddBoardToDeleteId,
+  handleAddBoardToEdit,
+  handleDeleteBoardModalToggle,
+} from "@/lib/redux/dashboard-slice";
+import { useAppDispatch } from "@/lib/redux/hooks";
 import DarkModeThemeIcon from "@/public/dark-mode-icon.svg";
 import Logo from "@/public/icon.svg";
 import LightModeThemeIcon from "@/public/light-mode-icon.svg";
+import { BOARDS_ACTIONS } from "@/utils/constants";
 import { ChevronDownIcon, EllipsisVertical, LayoutDashboard, Plus } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import Image from "next/image";
-import { useState } from "react";
+import Link from "next/link";
+import { useParams, usePathname } from "next/navigation";
+import { useEffect, useState, useTransition } from "react";
 
 export default function Navbar() {
-  const [isBoardsMenuListOpen, setIsBoardsMenuListOpen] = useState(true);
+  const [isBoardsMenuListOpen, setIsBoardsMenuListOpen] = useState(false);
+  const { user } = useSession();
+  const dispatch = useAppDispatch();
+  const { isPending, data: boardsData, error } = useGetBoards();
+  useDisplayError(error);
+  const pathname = usePathname();
+  const [isBoardSettingsOpen, setIsBoardSettingsOpen] = useState(false);
+  const [isDeletingBoard, startDeleteBoardTransition] = useTransition();
+  const { boardId } = useParams<{ boardId: string }>();
+
+  useEffect(() => {
+    const currentBoard = boardsData?.find((board) => board.id === boardId);
+    dispatch(handleAddBoardToEdit(currentBoard));
+  }, [boardId, boardsData, dispatch]);
+
+  console.log(boardId, "board id");
+
+  const handleBoardSettingsToggle = () => setIsBoardSettingsOpen((cur) => !cur);
+
+  const userFirstName = user?.name?.split(" ")?.at(0) ?? "";
   const tasks = 0;
-  const currentBoard = true;
+
+  const currentBoard = boardsData?.find(
+    (boardData) => pathname === `/dashboard/boards/${boardData.id}`,
+  );
 
   const handleBoardsMenuToggling = () => setIsBoardsMenuListOpen((curState) => !curState);
+
+  function handleBoardSettingActions(action: string) {
+    if (action === "delete") {
+      dispatch(handleAddBoardToDeleteId(boardId));
+      dispatch(handleDeleteBoardModalToggle());
+      setIsBoardSettingsOpen(false);
+    } else if (action === "edit") {
+      const currentBoard = boardsData?.find((board) => board.id === boardId);
+      dispatch(handleAddBoardToEdit(currentBoard));
+      dispatch(handleAddBoardFormToggle());
+      setIsBoardSettingsOpen(false);
+    }
+  }
 
   return (
     <div className="w-full">
@@ -23,7 +71,9 @@ export default function Navbar() {
         <div className="flex items-center gap-5">
           <Image src={Logo} alt="kanban logo" quality={75} className="md:hidden" />
           <div className="flex items-center gap-2">
-            <h1 className="text-lg font-bold md:text-xl lg:text-2xl">Platform Launch</h1>
+            <h1 className="text-lg font-bold md:text-xl lg:text-2xl">
+              {userFirstName && currentBoard ? currentBoard.name : `${userFirstName} Boards`}
+            </h1>
             <button
               aria-label="Boards menu"
               onClick={handleBoardsMenuToggling}
@@ -41,21 +91,52 @@ export default function Navbar() {
           <button
             aria-label="Add new task"
             className="btn btn-primary-s px-4 py-1.5 disabled:opacity-25 md:hidden"
-            disabled={!tasks}
+            disabled={!boardId}
           >
             <Plus className="size-4" />
           </button>
 
           <button
             className="btn-primary-l btn-primary-padding hidden disabled:opacity-25 md:block"
-            disabled={!tasks}
+            disabled={!boardId}
           >
             + add new task
           </button>
 
-          <button aria-label="Edit and delete board menu">
-            <EllipsisVertical className="text-medium-grey size-5" />
-          </button>
+          {boardsData?.length ? (
+            <div className="relative">
+              <button
+                aria-label="Edit and delete board menu z-50 absolute"
+                onClick={handleBoardSettingsToggle}
+              >
+                <EllipsisVertical className="text-medium-grey z-50 size-5" />
+              </button>
+
+              <div
+                className={`shadow-lines-light absolute top-12 right-0 z-20 flex h-22 w-44 flex-col items-start justify-center rounded-md bg-white px-1 shadow-md ${isBoardSettingsOpen ? "translate-y-0 opacity-100" : "pointer-events-none -translate-y-4 opacity-0"} transition-all`}
+              >
+                {BOARDS_ACTIONS.map((action, idx) => (
+                  <button
+                    key={idx}
+                    onClick={() => handleBoardSettingActions(action)}
+                    className={`body-l w-full px-3 py-1.5 text-left capitalize transition-all hover:bg-gray-100 ${action === "edit" ? "text-medium-grey" : "text-red"}`}
+                  >
+                    {action === "edit" ? (isDeletingBoard ? "editing..." : "edit") : ""}
+                    {action === "delete" ? (isDeletingBoard ? "deleting..." : "delete") : ""}
+                  </button>
+                ))}
+              </div>
+
+              {isBoardSettingsOpen && (
+                <div
+                  className="fixed top-0 left-0 h-screen w-full"
+                  onClick={handleBoardSettingsToggle}
+                />
+              )}
+            </div>
+          ) : (
+            ""
+          )}
         </div>
       </nav>
 
@@ -72,25 +153,36 @@ export default function Navbar() {
               initial={{ scale: "80%" }}
               animate={{ scale: "100%" }}
               exit={{ scale: "80%" }}
-              className="h-fit w-66 rounded-lg bg-white py-4 pr-6"
+              className="z-30 h-fit w-66 rounded-lg bg-white py-4 pr-6"
             >
-              <ul className="boards-dropdown flex flex-col">
-                <h3 className="heading-s text-medium-grey mb-4.5 px-4 uppercase">all boards (3)</h3>
-                <li
-                  className={`flex items-center gap-3 rounded-r-3xl px-4 py-3 ${currentBoard ? "bg-main-purple text-white" : "text-medium-grey"}`}
-                >
-                  <LayoutDashboard className="size-4" />{" "}
-                  <span className="heading-m capitalize">Platform launch</span>
-                </li>
-                <li
-                  className={`flex items-center gap-3 rounded-r-3xl px-4 py-3 ${false ? "bg-main-purple text-white" : "text-medium-grey"} hover:bg-main-purple-hover hover:text-white`}
-                >
-                  <LayoutDashboard className="size-4" />{" "}
-                  <span className="heading-m capitalize">Platform launch</span>
-                </li>
+              <ul className="boards-dropdown no-scrollbar flex max-h-75 flex-col overflow-auto">
+                <h3 className="heading-s text-medium-grey mb-4.5 px-4 uppercase">
+                  all boards ({boardsData?.length ?? 0})
+                </h3>
+                {isPending ? (
+                  <div>Loading...</div>
+                ) : (
+                  boardsData?.map((boardData, idx) => (
+                    <Link href={`/dashboard/boards/${boardData.id}`} key={idx}>
+                      <li
+                        key={idx}
+                        className={`flex items-center gap-3 rounded-r-3xl px-4 py-3 ${boardData.id === currentBoard?.id ? "bg-main-purple text-white" : "text-medium-grey"}`}
+                      >
+                        <LayoutDashboard className="size-4" />{" "}
+                        <span className="heading-m capitalize">{boardData.name}</span>
+                      </li>
+                    </Link>
+                  ))
+                )}
 
                 {/* create */}
-                <li className={`text-main-purple flex items-center gap-3 rounded-r-3xl px-4 py-3`}>
+                <li
+                  className={`text-main-purple flex items-center gap-3 rounded-r-3xl px-4 py-3`}
+                  onClick={() => {
+                    dispatch(handleAddBoardFormToggle());
+                    dispatch(handleAddBoardToEdit(null));
+                  }}
+                >
                   <LayoutDashboard className="size-4" />{" "}
                   <span className="heading-m capitalize">+ Create New Board</span>
                 </li>
@@ -115,6 +207,10 @@ export default function Navbar() {
                 </div>
               </div>
             </motion.div>
+            <div
+              className="fixed top-0 h-screen w-full"
+              onClick={() => setIsBoardsMenuListOpen(false)}
+            />
           </motion.aside>
         )}
       </AnimatePresence>
