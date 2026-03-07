@@ -62,7 +62,15 @@ export const getBoardsById = cache(async function (boardId: string | undefined) 
     const board = await db.query.boards.findFirst({
       where: (t, { eq, and }) => and(eq(t?.userId, user.id), eq(t.id, boardId)),
       with: {
-        columns: true,
+        columns: {
+          with: {
+            tasks: {
+              with: {
+                subtasks: true,
+              },
+            },
+          },
+        },
       },
     });
 

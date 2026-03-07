@@ -5,6 +5,7 @@ import { addNewBoardAction, editBoardAction } from "@/features/boards/actions/bo
 import {
   handleAddBoardFormToggle,
   handleAddBoardToEdit,
+  handleBoardMenuListToggle,
   selectDashboard,
 } from "@/lib/redux/dashboard-slice";
 import { useAppDispatch, useAppSelector } from "@/lib/redux/hooks";
@@ -62,9 +63,11 @@ export default function AddNewBoardForm() {
       if (res.error) {
         toast.error("Board creation failed", { description: res.error });
       } else if (res.success) {
+        dispatch(handleBoardMenuListToggle(false));
         toast.success("Board created successfully");
         reset();
         dispatch(handleAddBoardFormToggle());
+
         router.push(`/dashboard/boards/${res.newBoardId}`);
       }
     });
@@ -102,12 +105,12 @@ export default function AddNewBoardForm() {
             animate={{ scale: "100%" }}
             exit={{ scale: "80%" }}
             autoComplete="on"
-            className="form z-50 w-full max-w-100 space-y-6 rounded-[6px] bg-white px-5 py-5"
+            className="form dark:bg-dark-grey z-50 w-full max-w-100 space-y-6 rounded-[6px] bg-white px-5 py-5"
             onSubmit={handleSubmit(
               boardToEdit ? handleBoardUpdateChanges : handleNewBoardFormSubmit,
             )}
           >
-            <h2 className="heading-l text-black capitalize">
+            <h2 className="heading-l text-black capitalize dark:text-white">
               {boardToEdit ? "edit board" : "add new board"}
             </h2>
 
@@ -158,7 +161,7 @@ export default function AddNewBoardForm() {
                 </div>
                 <button
                   type="button"
-                  className="btn btn-secondary mt-2 w-full py-2.5"
+                  className="btn btn-secondary dark:text-main-purple mt-2 w-full py-2.5 dark:bg-white"
                   onClick={() => append({ name: "" })}
                   disabled={isCreatingNewBoard || isEditingBoard}
                 >

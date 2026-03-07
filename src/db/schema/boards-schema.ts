@@ -1,4 +1,5 @@
 import { user } from "@/db/schema/auth-schema";
+import { tasks } from "@/db/schema/tasks-schema";
 import { relations, sql } from "drizzle-orm";
 import { pgTable, text, timestamp } from "drizzle-orm/pg-core";
 
@@ -30,9 +31,11 @@ export const boardsRelations = relations(boards, ({ many }) => ({
   columns: many(columns),
 }));
 
-export const columnsRelations = relations(columns, ({ one }) => ({
+export const columnsRelations = relations(columns, ({ one, many }) => ({
   board: one(boards, {
     fields: [columns.boardId],
     references: [boards.id],
   }),
+
+  tasks: many(tasks),
 }));

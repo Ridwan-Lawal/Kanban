@@ -30,7 +30,7 @@ export default function OAuthBtn({ children, onClick }: OAuthBtnProp) {
 
   return (
     <button
-      className="btn body-l text-medium-grey flex w-full items-center justify-center gap-4 bg-gray-100 py-2.5 text-base font-medium"
+      className="btn body-l text-medium-grey dark:bg-dark-grey flex w-full items-center justify-center gap-4 bg-gray-100 py-2.5 text-base font-medium dark:text-white"
       onClick={handleGoogleSignIn}
     >
       <Image alt="google icon" src={GoogleLogo} quality={75} className="size-5" />

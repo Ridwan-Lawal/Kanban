@@ -36,6 +36,20 @@
       "when": 1770208462839,
       "tag": "0004_worried_korvac",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1772065065629,
+      "tag": "0005_famous_purple_man",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1772348005972,
+      "tag": "0006_lyrical_mordo",
+      "breakpoints": true
     }
   ]
 }

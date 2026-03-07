@@ -55,14 +55,16 @@ export default function Register() {
   }
 
   return (
-    <div className="from-main-purple-hover/10 flex min-h-screen w-screen items-center justify-center bg-linear-30 to-white">
+    <div className="from-main-purple-hover/10 dark:to-very-dark-grey dark:from-grey-900 flex min-h-screen w-screen items-center justify-center bg-linear-30 to-white">
       <div className="w-full max-w-100 px-4 py-8">
         {/* header */}
         <div className="flex flex-col items-center justify-center gap-4">
           <Image src={Logo} alt="The kanban logo" quality={75} />
           <div className="space-y-2 text-center">
             <h1 className="heading-xl">Create an account</h1>
-            <p className="body-l text-lines-dark">Get started with your free account </p>
+            <p className="body-l text-lines-dark dark:text-medium-grey">
+              Get started with your free account{" "}
+            </p>
           </div>
         </div>
 

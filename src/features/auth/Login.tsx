@@ -53,14 +53,16 @@ export default function Login() {
   }
 
   return (
-    <div className="from-main-purple-hover/10 flex min-h-screen w-screen items-center justify-center bg-linear-to-r to-white">
+    <div className="dark:to-very-dark-grey from-main-purple-hover/10 flex min-h-screen w-screen items-center justify-center bg-linear-to-r to-white dark:from-gray-900">
       <div className="w-full max-w-100 px-4 py-8">
         {/* header */}
         <div className="flex flex-col items-center justify-center gap-4">
           <Image src={Logo} alt="The kanban logo" quality={75} />
           <div className="space-y-2 text-center">
             <h1 className="heading-xl">Welcome back</h1>
-            <p className="body-l text-lines-dark">Sign in to your account to continue</p>
+            <p className="body-l text-lines-dark dark:text-medium-grey">
+              Sign in to your account to continue
+            </p>
           </div>
         </div>
 

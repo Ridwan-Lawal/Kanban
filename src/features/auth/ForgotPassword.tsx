@@ -38,14 +38,14 @@ export default function ForgotPassword() {
   }
 
   return (
-    <div className="from-main-purple-hover/10 flex min-h-screen w-screen items-center justify-center bg-linear-to-r to-white">
+    <div className="from-main-purple-hover/10 dark:to-very-dark-grey flex min-h-screen w-screen items-center justify-center bg-linear-to-r to-white dark:from-gray-900">
       <div className="w-full max-w-100 px-4 py-8">
         {/* header */}
         <div className="flex flex-col items-center justify-center gap-4">
           <Image src={Logo} alt="The kanban logo" quality={75} />
           <div className="space-y-2 text-center">
             <h1 className="heading-xl">Forgot password?</h1>
-            <p className="body-l text-lines-dark">
+            <p className="body-l text-lines-dark dark:text-medium-grey">
               Enter your email below and we will send you a link to reset your password.
             </p>
           </div>

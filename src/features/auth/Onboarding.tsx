@@ -45,7 +45,7 @@ export default function Onboarding() {
   }
 
   return (
-    <div className="from-main-purple-hover/10 flex min-h-screen w-screen items-center justify-center bg-linear-to-r to-white">
+    <div className="from-main-purple-hover/10 dark:to-very-dark-grey flex min-h-screen w-screen items-center justify-center bg-linear-to-r to-white dark:from-gray-900">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -57,7 +57,7 @@ export default function Onboarding() {
           <Image src={Logo} alt="The kanban logo" quality={75} />
           <div className="space-y-2 text-center">
             <h1 className="heading-xl">What should we call you?</h1>
-            <p className="body-l text-lines-dark">
+            <p className="body-l text-lines-dark dark:text-medium-grey">
               We&apos;ll use this to personalize your experience.
             </p>
           </div>

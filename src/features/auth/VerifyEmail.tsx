@@ -38,13 +38,13 @@ export default function VerifyEmail() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4">
-      <div className="w-full max-w-md rounded-xl border border-gray-100 bg-white p-8 text-center shadow-lg">
+    <div className="dark:bg-dark-grey flex min-h-screen items-center justify-center bg-gray-50 px-4">
+      <div className="dark:bg-very-dark-grey dark:border-dark-grey w-full max-w-md rounded-xl border border-gray-100 bg-white p-8 text-center shadow-lg">
         {/* Icon */}
-        <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-[#f3f3fd]">
+        <div className="dark:bg-dark-grey mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-[#f3f3fd]">
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            className="text-main-purple h-8 w-8"
+            className="text-main-purple h-8 w-8 dark:text-white"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -59,8 +59,8 @@ export default function VerifyEmail() {
         </div>
 
         {/* Text Content */}
-        <h2 className="mb-2 text-2xl font-bold text-gray-900">Verify your email</h2>
-        <p className="mb-6 text-gray-500">
+        <h2 className="mb-2 text-2xl font-bold text-gray-900 dark:text-white">Verify your email</h2>
+        <p className="dark:text-medium-grey mb-6 text-gray-500">
           We&apos;ve sent a verification link to your email address. Please click the link to
           confirm your account.
         </p>

@@ -53,9 +53,8 @@ export function PasswordInputField({
             <EyeIcon className={iconStyle} />
           )}
         </button>
-
-        {error && <p className="body-l text-red">children</p>}
       </div>
+      {error && <p className="body-l text-red text-right text-xs">{error}</p>}
     </div>
   );
 }
