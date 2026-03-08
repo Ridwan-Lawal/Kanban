@@ -19,9 +19,130 @@
   --color-red: #ea5555;
   --color-red-hover: #ff9898;
   --color-new-column-bg: #e9effa;
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  --radius-lg: var(--radius);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-sm: calc(var(--radius) - 4px);
+
+  --color-sidebar-background: var(--sidebar-background);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
 }
 
 @layer base {
+  :root {
+    /* Using oklch or hsl - converted to space-separated values for v4 compatibility */
+    --background: hsl(220 69% 97%); /* #f4f7fd */
+    --foreground: hsl(240 64% 1%); /* #000112 */
+
+    --card: hsl(0 0% 100%); /* #ffffff */
+    --card-foreground: hsl(240 64% 1%);
+
+    --popover: hsl(0 0% 100%);
+    --popover-foreground: hsl(240 64% 1%);
+
+    --primary: hsl(242 48% 58%); /* #635fc7 */
+    --primary-foreground: hsl(0 0% 100%);
+
+    --secondary: hsl(224 49% 94%); /* #e9effa */
+    --secondary-foreground: hsl(240 64% 1%);
+
+    --muted: hsl(220 69% 97%); /* #f4f7fd */
+    --muted-foreground: hsl(215 14% 58%); /* #828fa3 */
+
+    --accent: hsl(224 49% 94%); /* #e9effa */
+    --accent-foreground: hsl(240 64% 1%);
+
+    --destructive: hsl(0 79% 63%); /* #ea5555 */
+    --destructive-foreground: hsl(0 0% 100%);
+
+    --border: hsl(225 68% 88%); /* #e4ebfa */
+    --input: hsl(225 68% 88%);
+    --ring: hsl(242 48% 58%);
+
+    --radius: 0.5rem;
+
+    --sidebar-background: hsl(0 0% 100%);
+    --sidebar-foreground: hsl(240 64% 1%);
+    --sidebar-primary: hsl(242 48% 58%);
+    --sidebar-primary-foreground: hsl(0 0% 100%);
+    --sidebar-accent: hsl(224 49% 94%);
+    --sidebar-accent-foreground: hsl(240 64% 1%);
+    --sidebar-border: hsl(225 68% 88%);
+    --sidebar-ring: hsl(242 48% 58%);
+  }
+
+  .dark {
+    --background: hsl(230 15% 15%); /* #20212c */
+    --foreground: hsl(0 0% 100%); /* #ffffff */
+
+    --card: hsl(235 14% 19%); /* #2b2c37 */
+    --card-foreground: hsl(0 0% 100%);
+
+    --popover: hsl(235 14% 19%);
+    --popover-foreground: hsl(0 0% 100%);
+
+    --primary: hsl(242 48% 58%); /* #635fc7 */
+    --primary-foreground: hsl(0 0% 100%);
+
+    --secondary: hsl(236 12% 27%); /* #3e3f4e */
+    --secondary-foreground: hsl(0 0% 100%);
+
+    --muted: hsl(236 12% 27%);
+    --muted-foreground: hsl(215 14% 58%); /* #828fa3 */
+
+    --accent: hsl(236 12% 27%);
+    --accent-foreground: hsl(0 0% 100%);
+
+    --destructive: hsl(0 79% 63%); /* #ea5555 */
+    --destructive-foreground: hsl(0 0% 100%);
+
+    --border: hsl(236 12% 27%); /* #3e3f4e */
+    --input: hsl(236 12% 27%);
+    --ring: hsl(243 100% 82%); /* #a8a4ff */
+
+    --sidebar-background: hsl(235 14% 19%);
+    --sidebar-foreground: hsl(0 0% 100%);
+    --sidebar-primary: hsl(242 48% 58%);
+    --sidebar-primary-foreground: hsl(0 0% 100%);
+    --sidebar-accent: hsl(236 12% 27%);
+    --sidebar-accent-foreground: hsl(0 0% 100%);
+    --sidebar-border: hsl(236 12% 27%);
+    --sidebar-ring: hsl(243 100% 82%);
+  }
 }
 
 @layer components {
